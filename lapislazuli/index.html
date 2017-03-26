@@ -1,0 +1,58 @@
+<html ng-app="countryApp">
+  <head>
+    <meta charset="utf-8">
+    <title>Angular Terrenos</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+    <script>
+      var countryApp = angular.module('countryApp', []);
+      countryApp.controller('CountryCtrl', function ($scope, $http){
+        $http.get('items.json').success(function(data) {
+          $scope.countries = data;
+        });
+      });
+    </script>
+    <script>
+        angular.module('submitExample', [])
+        .controller('ExampleController', ['$scope', function($scope) {
+            $scope.list = [];
+            $scope.text = 'hello';
+            $scope.submit = function() {
+                if ($scope.text) {
+                    $scope.list.push(this.text);
+                    $scope.text = '';
+                }
+            };
+        }]);
+    </script>
+  </head>
+  <body ng-controller="CountryCtrl">
+	<h2>Angular Terrenos</h2>
+    Search:<input ng-model="query" type="text"/>
+    <form ng-submit="submit()" ng-controller="ExampleController">
+        Enter text and hit enter:
+        <input type="text" ng-model="text" name="text" />
+        <input type="submit" id="submit" value="Submit" />
+        <pre>list={{list}}</pre>
+    </form>
+    <table>
+      <tr>
+        <th>Id</th>
+        <th>Poblacion</th>
+        <th><a href="" ng-click="sortField = 'precio'">Precio</a></th>
+        <th><a href="" ng-click="sortField = 'maps.rows[0].elements[0].distance.text'">Distancia</a></th>
+        <th><a href="" ng-click="sortField = 'maps.rows[0].elements[0].distance.text'">Duracion</a></th>
+        <th>Url</th>
+      </tr>
+      <tr ng-repeat="country in countries | orderBy: sortField  | filter:query ">
+        <td>{{country.identificador}}</td>
+		<td>{{country.poblacion}}</td>
+        <td>{{country.precio | currency:"€"}}</td>
+        <td>{{country.maps.rows[0].elements[0].distance.text}}</td>
+        <td>{{country.maps.rows[0].elements[0].duration.text}}</td>
+        <td><a href="{{country.url}}" target="_blank">{{country.url}}</a></td>
+      </tr>
+    </table>
+  </body>
+</html>
+
